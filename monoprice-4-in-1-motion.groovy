@@ -10,12 +10,16 @@
  *  Author: FlorianZ,Kranasian, Humac
  *  Date: 2015-03-17
  */
+// units, tempReport, humidityReport, luxReport, retriggerTime, sensitivity, ledMode
 preferences {
-    input "inactivityTimeout", "number", title: "Inactivity Timeout", description: "Number of minutes after movement is gone before its reported inactive by the sensor."
-    input description: "This feature allows you to correct any temperature variations by selecting an offset. Ex: If your sensor consistently reports a temp that's 5 degrees too warm, you'd enter \"-5\". If 3 degrees too cold, enter \"+3\".", displayDuringSetup: false, type: "paragraph", element: "paragraph"
-    input "tempOffset", "number", title: "Temperature Offset", description: "Adjust temperature by this many degrees", range: "*..*", displayDuringSetup: false
-    input description: "This feature allows you to change the temperature Unit. If left blank or anything else is typed the default is F.", displayDuringSetup: false, type: "paragraph", element: "paragraph" 
-    input "tempUnit", "string", title: "Celsius or Fahrenheit", description: "Temperature Unit (Type C or F)", displayDuringSetup: false
+    input name: "units", type: "enum", options: [ "Imperial","Metric" ], description: "Imperial or Metric units?", required: true
+    input name: "tempReport", type: "decimal", range: "0.1..5", description: "Temperature is reported after changing 0.1-5 degrees C (Default 1 deg)", required: false
+    input name: "humidityReport", type: "number", range: "1..50", description: "Humidity is reported after changing 1-50% (Default 10%)", required: false
+    input name: "luxReport", type: "number", range: "1..50", description: "Report lux after changing 1-50% (Default 10%)", required: false
+    input name: "retriggerTime", type: "number", range: "1..255", description: "Motion Retrigger Time (Default 3)", required: false
+    input name: "sensitivity", type: "number", range: "1..7", description: "Sensitivity (Default 4)", required: false
+    input name: "ledMode", type: "enum", options: [ "LED is off", "LED breathes temp, flashes for motion (uses a lot of power)", "LED quickly flashes the temp when motion is detected" ], required: true, description: "Set the LED mode"
+
 }
 
 metadata {
@@ -25,7 +29,7 @@ metadata {
         capability "Temperature Measurement"
         capability "Sensor"
 
-        fingerprint deviceId:"0x2001", inClusters:"0x71, 0x85, 0x80, 0x72, 0x30, 0x86, 0x31, 0x70, 0x84"
+        fingerprint deviceId:"0x2101", mfg: "0109", inClusters:"0x71, 0x85, 0x80, 0x72, 0x30, 0x86, 0x31, 0x70, 0x84"
         // zw:Ss type:0701 mfr:0109 prod:2021 model:2101 //////ver:5.01 zwv:4.05 lib:03 cc:5E,98 sec:86,72,5A,85,59,73,80,71,31,70,84,7A role:06 ff:8C07 ui:8C07
     }
 
@@ -121,6 +125,7 @@ def sendSettingsUpdate(physicalgraph.zwave.commands.wakeupv2.WakeUpNotification 
     def inactivityTimeoutStr = Integer.toString(inactivityTimeout)
     def actions = []
     def lastBatteryUpdate = state.lastBatteryUpdate == null ? 0 : state.lastBatteryUpdate
+    /// TODO:mat
     if ((new Date().time - lastBatteryUpdate) > 1000 * 60 * 60 * 24) {
         actions.addAll([
             response(zwave.batteryV1.batteryGet().format()),
