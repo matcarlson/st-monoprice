@@ -10,7 +10,7 @@
  *  Author: FlorianZ,Kranasian, Humac
  *  Date: 2015-03-17
  */
-// units, tempReport, humidityReport, luxReport, retriggerTime, sensitivity, ledMode
+// units=Imperial,Metric, tempReport=0.1..5, humidityReport=1..50, luxReport1..50, retriggerTime1..255, sensitivity1..7, ledMode123
 preferences {
     input name: "units", type: "enum", options: [ "Imperial","Metric" ], description: "Imperial or Metric units?", required: true
     input name: "tempReport", type: "decimal", range: "0.1..5", description: "Temperature is reported after changing 0.1-5 degrees C (Default 1 deg)", required: false
@@ -23,7 +23,7 @@ preferences {
 }
 
 metadata {
-    definition (name: "Monoprice Motion Sensor", author: "florianz") {
+    definition (name: "Monoprice 4-in-1 Motion Sensor", author: "matcarlson") {
         capability "Battery"
         capability "Motion Sensor"
         capability "Temperature Measurement"
@@ -55,6 +55,9 @@ metadata {
             state("active", label:'motion', icon:"st.motion.motion.active", backgroundColor:"#53a7c0")
             state("inactive", label:'no motion', icon:"st.motion.motion.inactive", backgroundColor:"#ffffff")
         }
+        valueTile("humidity", "device.humidity", inactiveLabel: false, width: 2, height: 2) {
+		state "humidify", label: '${currentValue}%'
+	}
 
         valueTile("temperature", "device.temperature", inactiveLabel: false, width: 2, height: 2) {
             state "temperature", label:'${currentValue}°',
@@ -81,7 +84,7 @@ metadata {
         valueTile("battery", "device.battery", inactiveLabel: false, decoration: "flat") {
             state "battery", label:'${currentValue}% battery', unit:"%"
         }
-        main(["motion", "temperature"])
+        main(["motion", "temperature", "humidity"])
         details(["motion", "temperature", "battery"])
     }
 }
@@ -120,9 +123,10 @@ def zwaveEvent(physicalgraph.zwave.commands.wakeupv2.WakeUpNotification cmd) {
 }
 
 def sendSettingsUpdate(physicalgraph.zwave.commands.wakeupv2.WakeUpNotification cmd) {
+// units=Imperial,Metric, tempReport=0.1..5, humidityReport=1..50, luxReport1..50, retriggerTime1..255, sensitivity1..7, ledMode123
     def inactivityTimeout = (settings.inactivityTimeout == null ?
                              1 : Integer.parseInt(settings.inactivityTimeout))
-    def inactivityTimeoutStr = Integer.toString(inactivityTimeout)
+    def inactivityTimeoutStr = Integer.toString(retriggerTime)
     def actions = []
     def lastBatteryUpdate = state.lastBatteryUpdate == null ? 0 : state.lastBatteryUpdate
     /// TODO:mat
@@ -135,9 +139,33 @@ def sendSettingsUpdate(physicalgraph.zwave.commands.wakeupv2.WakeUpNotification 
     }
     actions.addAll([
         response(zwave.configurationV1.configurationSet(
-            configurationValue: [inactivityTimeout], defaultValue: False, parameterNumber: 1, size: 1).format()),
+            configurationValue: [retriggerTime], defaultValue: False, parameterNumber: 5, size: 1).format()),
         response("delay 600"),
-        [ descriptionText: "${device.displayName} was sent inactivity timeout of ${inactivityTimeoutStr}.", value: "" ]
+        [ descriptionText: "${device.displayName} was sent inactivity timeout of ${inactivityTimeoutStr}.", value: "" ],
+	response(zwave.configurationV1.configurationSet(
+		configurationValue: [sensitivity], defaultValue: False, parameterNumber: 6, size: 1).format())
+	response("delay 600")
+	[ descriptionText: "${device.displayName} was sent a sensitivity of ${sensitivity}.", value: ""],
+	response(zwave.configurationV1.configurationSet(
+		configurationValue: [ledMode], defaultValue: False, parameterNumber: 7, size: 1).format())
+	response("delay 600")
+	[ descriptionText: "${device.displayName} was sent LED mode of ${ledMode}.", value: ""],
+	response(zwave.configurationV1.configuartionSet(
+		configurationValue: [luxReport], defaultValue: False, parameterNumber: 4, size: 1).format())
+	response("delay 600")
+	[ descriptionText: "${device.displayName} was sent LUX report value of ${luxReport}.", value: "" ],
+	response(zwave.configurationV1.configurationSet(
+		configurationValue: [humidityReport], defaultValue: False, parameterNumber: 3, size: 1).format())
+	response("delay 600")
+	[ descriptionText: "${device.displayName} was sent Humidity report value of ${humidityReport}.", value: ""],
+	response(zwave.configurationV1.configurationSet(
+		configurationValue: [tempReport], defaultValue: False, parameterNumber: 2, size: 1).format())
+	response("delay 600")
+	[ descriptionText: "${device.dispalyName} was sent a temp report value of ${tempReport}.", value: ""],
+	response(zwave.configurationV1.configurationSet(
+		configurationValue: [units], defaultValue: False, paremeterNumber: 1, size: 1).format())
+	response("delay 600")
+	[ descriptionText: "${device.displayName} was sent a temp unit of ${units}.", value: ""],
     ])
     actions
 }
