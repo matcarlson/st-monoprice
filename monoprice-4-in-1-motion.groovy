@@ -143,28 +143,28 @@ def sendSettingsUpdate(physicalgraph.zwave.commands.wakeupv2.WakeUpNotification 
         response("delay 600"),
         [ descriptionText: "${device.displayName} was sent inactivity timeout of ${inactivityTimeoutStr}.", value: "" ],
 	response(zwave.configurationV1.configurationSet(
-		configurationValue: [sensitivity], defaultValue: False, parameterNumber: 6, size: 1).format())
-	response("delay 600")
+		configurationValue: [sensitivity], defaultValue: False, parameterNumber: 6, size: 1).format()),
+	response("delay 600"),
 	[ descriptionText: "${device.displayName} was sent a sensitivity of ${sensitivity}.", value: ""],
 	response(zwave.configurationV1.configurationSet(
-		configurationValue: [ledMode], defaultValue: False, parameterNumber: 7, size: 1).format())
-	response("delay 600")
+		configurationValue: [ledMode], defaultValue: False, parameterNumber: 7, size: 1).format()),
+	response("delay 600"),
 	[ descriptionText: "${device.displayName} was sent LED mode of ${ledMode}.", value: ""],
 	response(zwave.configurationV1.configuartionSet(
-		configurationValue: [luxReport], defaultValue: False, parameterNumber: 4, size: 1).format())
-	response("delay 600")
+		configurationValue: [luxReport], defaultValue: False, parameterNumber: 4, size: 1).format()),
+	response("delay 600"),
 	[ descriptionText: "${device.displayName} was sent LUX report value of ${luxReport}.", value: "" ],
 	response(zwave.configurationV1.configurationSet(
-		configurationValue: [humidityReport], defaultValue: False, parameterNumber: 3, size: 1).format())
-	response("delay 600")
+		configurationValue: [humidityReport], defaultValue: False, parameterNumber: 3, size: 1).format()),
+	response("delay 600"),
 	[ descriptionText: "${device.displayName} was sent Humidity report value of ${humidityReport}.", value: ""],
 	response(zwave.configurationV1.configurationSet(
-		configurationValue: [tempReport], defaultValue: False, parameterNumber: 2, size: 1).format())
-	response("delay 600")
+		configurationValue: [tempReport], defaultValue: False, parameterNumber: 2, size: 1).format()),
+	response("delay 600"),
 	[ descriptionText: "${device.dispalyName} was sent a temp report value of ${tempReport}.", value: ""],
 	response(zwave.configurationV1.configurationSet(
-		configurationValue: [units], defaultValue: False, paremeterNumber: 1, size: 1).format())
-	response("delay 600")
+		configurationValue: [units], defaultValue: False, paremeterNumber: 1, size: 1).format()),
+	response("delay 600"),
 	[ descriptionText: "${device.displayName} was sent a temp unit of ${units}.", value: ""],
     ])
     actions
