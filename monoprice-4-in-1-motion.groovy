@@ -352,17 +352,17 @@ def configure()
 	// Unit - 0=C, 1=F
 	zwave.configurationV1.configurationSet(parameterNumber: 1, size: 1, scaledConfigurationValue: units ? 1 : 0)
 	// Temp Change
-	zwave.configurationV1.configurationSet(paremeterNumber: 2, size: 1, scaledConfigurationValue: tempChange)
+	zwave.configurationV1.configurationSet(parameterNumber: 2, size: 1, scaledConfigurationValue: tempChange)
 	// Humidity Change
-	zwave.configurationV1.configurationSet(paremeterNumber: 3, size: 1, scaledConfigurationValue: humidityChange)
+	zwave.configurationV1.configurationSet(parameterNumber: 3, size: 1, scaledConfigurationValue: humidityChange)
 	// Lux change
-	zwave.configurationV1.configurationSet(paremeterNumber: 4, size: 1, scaledConfigurationValue: luxChange)
+	zwave.configurationV1.configurationSet(parameterNumber: 4, size: 1, scaledConfigurationValue: luxChange)
 	// Retrigger time
-	zwave.configurationV1.configurationSet(paremeterNumber: 5, size: 1, scaledConfigurationValue: retriggerTime)
+	zwave.configurationV1.configurationSet(parameterNumber: 5, size: 1, scaledConfigurationValue: retriggerTime)
 	// Sensitivity
-	zwave.configurationV1.configurationSet(paremeterNumber: 6, size: 1, scaledConfigurationValue: sensitivity)
+	zwave.configurationV1.configurationSet(parameterNumber: 6, size: 1, scaledConfigurationValue: sensitivity)
 	// LED Mode
-	zwave.configurationV1.configurationSet(paremeterNumber: 7, size: 1, scaledConfigurationValue: ledMode)
+	zwave.configurationV1.configurationSet(parameterNumber: 7, size: 1, scaledConfigurationValue: ledMode)
     
 
 		// disable notification-style motion events
