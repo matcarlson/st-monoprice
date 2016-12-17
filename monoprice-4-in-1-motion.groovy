@@ -97,7 +97,7 @@ Option 1 is best for the battery life, option 2 is the worst.
 */
 
 metadata {
-    definition (name: "ZOOZ ZSE40 4-in-1 sensor", namespace: "skyjunky", author: "Simon Capper") {
+    definition (name: "Monoprice 15902 4-in-1 Motion Sensor", namespace: "matcarlson", author: "Mat Carlson") {
         capability "Battery"
         capability "Motion Sensor"
         capability "Tamper Alert"
@@ -108,7 +108,7 @@ metadata {
         
         attribute "sensorlevels", "string"
         
-        fingerprint deviceId: "0x0701", inClusters: "0x5E,0x98,0x72,0x5A,0x85,0x59,0x73,0x80,0x71,0x31,0x70,0x84,0x7A"
+        fingerprint deviceId: "0x2101", inClusters: "0x5E,0x98,0x72,0x5A,0x85,0x59,0x73,0x80,0x71,0x31,0x70,0x84,0x7A"
     }
 
     tiles(scale:2) {
