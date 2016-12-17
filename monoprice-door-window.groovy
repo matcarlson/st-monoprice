@@ -16,7 +16,7 @@
 */
 
 metadata {
-	definition (name: "Z-Wave Plus Door/Window Sensor", namespace: "smartthings", author: "SmartThings") {
+	definition (name: "Monoprice Z-Wave Plus Door/Window Sensor", namespace: "smartthings", author: "SmartThings") {
 		capability "Contact Sensor"
 		capability "Configuration"
 		capability "Battery"
