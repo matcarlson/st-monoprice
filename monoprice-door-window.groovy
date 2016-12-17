@@ -16,7 +16,7 @@
 */
 
 metadata {
-	definition (name: "Z-Wave Plus Door/Window Sensor", namespace: "smartthings", author: "SmartThings") {
+	definition (name: "Monoprice Door Windows ZWave Plus / ZD2102", namespace: "matcarlson", author: "Mat Carlson") {
 		capability "Contact Sensor"
 		capability "Configuration"
 		capability "Battery"
@@ -29,6 +29,7 @@ metadata {
 		attribute "WakeUp", "string"
 		attribute "WirelessConfig", "string"
 
+		fingerprint deviceId: "0x2102", inClusters: "0x5E,0x98"
 		fingerprint deviceId: "0x0701", inClusters: "0x5E, 0x98, 0x86, 0x72, 0x5A, 0x85, 0x59, 0x73, 0x80, 0x71, 0x70, 0x84, 0x7A"
 		fingerprint type:"8C07", inClusters: "5E,98,86,72,5A,71"
 		fingerprint mfr:"0109", prod:"2001", model:"0106"  // not using deviceJoinName because it's sold under different brand names
@@ -47,6 +48,9 @@ metadata {
 
 		main (["contact"])
 		details(["contact","battery"])
+	}
+preferences {
+		input "enExternal", "bool", title: "Enable external NC contact?", defaultValue: false, required: false
 	}
 
 	simulator {
@@ -75,6 +79,7 @@ def configure() {
 	cmds += secureSequence([
 		zwave.manufacturerSpecificV2.manufacturerSpecificGet(),
 		zwave.batteryV1.batteryGet(),
+		zwave.configurationV1.configurationSet(scaledConfigurationValue: enExternal ? 255 : 0, parameterNumber: 1),
 	], 500)
 
 	cmds << "delay 8000"
@@ -123,6 +128,10 @@ def parse(String description) {
 	}
 
 	log.debug "Parsed '$description' to $result"
+//	if (state.configured != false) {
+		log.debug "Running configuration"
+		configure()
+//	}
 	return result
 }
 
