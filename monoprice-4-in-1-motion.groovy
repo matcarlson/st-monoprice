@@ -14,7 +14,7 @@
  */
 metadata
 {
-	definition (name: "Aeon Multisensor 4 Gen5 (Configurable)", namespace: "john.fullman", author: "john.fullman@gmail.com")
+	definition (name: "Monoprice 4-in-1 Motion Sensor", namespace: "matcarlson", author: "matcarlson")
     {
 		capability "Motion Sensor"
 		capability "Temperature Measurement"
