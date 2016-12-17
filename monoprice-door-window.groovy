@@ -17,17 +17,22 @@
  */
 
 metadata {
-	definition (name: "Z-Wave Door/Window Sensor", namespace: "smartthings", author: "SmartThings") {
+	definition (name: "Monoprice Door Window Sensor", namespace: "matcarlson", author: "Mat Carlson") {
 		capability "Contact Sensor"
 		capability "Sensor"
 		capability "Battery"
 		capability "Configuration"
 
+		fingerprint deviceId: "0x2102", inClusters: "0x5E,0x98" // Monoprice
+// 5E,98 sec:72,5A,80,73,86,84,85,59,71,70,7A
 		fingerprint deviceId: "0x2001", inClusters: "0x30,0x80,0x84,0x85,0x86,0x72"
 		fingerprint deviceId: "0x07", inClusters: "0x30"
 		fingerprint deviceId: "0x0701", inClusters: "0x5E,0x98"
 		fingerprint deviceId: "0x0701", inClusters: "0x5E,0x86,0x72,0x98", outClusters: "0x5A,0x82"
 		fingerprint deviceId: "0x0701", inClusters: "0x5E,0x80,0x71,0x85,0x70,0x72,0x86,0x30,0x31,0x84,0x59,0x73,0x5A,0x8F,0x98,0x7A", outClusters:"0x20" // Philio multi+
+	}
+	preferences {
+		input "enExternal", "bool", title: "Enable external NC contact?", defaultValue: false, required: false
 	}
 
 	// simulator metadata
@@ -49,7 +54,7 @@ metadata {
 		}
 
 		main "contact"
-		details(["contact", "battery"])
+		details(["contact",  "battery"])
 	}
 }
 
@@ -97,6 +102,7 @@ def configure() {
 	commands([
 		zwave.manufacturerSpecificV2.manufacturerSpecificGet(),
 		zwave.batteryV1.batteryGet()
+		zwave.configurationV1.configurationSet(scaledConfigurationValue: enExternal ? 255 : 0, parameterNumber: 1)
 	], 6000)
 }
 
