@@ -16,7 +16,7 @@
 */
 
 metadata {
-	definition (name: "Monoprice Door Windows ZWave Plus / ZD2102", namespace: "matcarlson", author: "Mat Carlson") {
+	definition (name: "Z-Wave Plus Door/Window Sensor", namespace: "smartthings", author: "SmartThings") {
 		capability "Contact Sensor"
 		capability "Configuration"
 		capability "Battery"
@@ -52,7 +52,6 @@ metadata {
 preferences {
 		input "enExternal", "bool", title: "Enable external NC contact?", defaultValue: false, required: false
 	}
-
 	simulator {
 		// messages the device returns in response to commands it receives
 		status "open (basic)" : "command: 9881, payload: 00 20 01 FF"
@@ -115,7 +114,7 @@ def parse(String description) {
 		result = createEvent( name: "secureInclusion", value: "failed", eventType: "ALERT",
 				descriptionText: "This sensor failed to complete the network security key exchange. If you are unable to control it via SmartThings, you must remove it from your network and add it again.")
 	} else if (description.startsWith("Err")) {
-		result = createEvent(descriptionText: "$device.displayName $description", isStsed under the A)
+		result = createEvent(descriptionText: "$device.displayName $description", isStateChange: true)
 	} else {
 		cmd = zwave.parse(description, commandClassVersions)
 		if (cmd) {
@@ -128,10 +127,7 @@ def parse(String description) {
 	}
 
 	log.debug "Parsed '$description' to $result"
-//	if (state.configured != false) {
-		log.debug "Running configuration"
-		configure()
-//	}
+	configure()
 	return result
 }
 
@@ -155,7 +151,7 @@ def sensorValueEvent(value) {
 	}
 }
 
-def zwaveEvent(physicalstrph.zwave.commands.basicv1.BasicReport cmd) {
+def zwaveEvent(physicalgraph.zwave.commands.basicv1.BasicReport cmd) {
 	return sensorValueEvent(cmd.value)
 }
 
