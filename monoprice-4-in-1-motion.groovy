@@ -27,6 +27,9 @@ metadata
         capability "Refresh"
 
 		fingerprint deviceId: "0x0701", inClusters: "0x5E,0x86,0x72,0x59,0x85,0x73,0x71,0x84,0x80,0x30,0x31,0x70,0x98,0x7A", outClusters:"0x5A"
+// Monoprice specific
+// zw:Ss type:0701 mfr:0109 prod:2021 model:2101 ver:5.01 zwv:4.05 lib:03 cc:5E,98 sec:86,72,5A,85,59,73,80,71,31,70,84,7A role:06 ff:8C07 ui:8C07
+//		fingerprint deviceId: "2101", 
 	}
     
     preferences
@@ -34,12 +37,12 @@ metadata
 	//Monoprice reporting specifcs
 	input "units", "bool", title: "Should we use Imperial units (Farenheight)?", required: false, displayDuringSetup: true, defaultValue: true
 // TODO: change this to 0.1 to 5.0 deg c / lux / RH percent
-	input "tempChange", "number", title: "When should the temperature be reported in deg C?", range: 1..50, defaultValue: 10, displayDuringSetup: true, required: true
-	input "humidityChange", "number", title: "When should the humidity be reported in percent change?", range: 1..50, defaultValue: 10, displayDuringSetup: true, required: true
-	input "luxChange", "number", title: "When should the lux be reported in percent change", range: 1..50, defaultValue: 10, displayDuringSetup: true, required: true
-	input "retriggerTime", "number", title: "How long should we say motion is detected?", range: 1..255, defaultValue: 3, displayDuringSetup: true, required: true
-	input "sensitivity", "number", title: "How sensitive should the motion detector be?", range: 1..7, defaultValue: 4, displayDuringSetup: true, required: true
-	input "ledMode", "number", title: "LED Mode: 1=off, 2=breathes temp and flashes motion, 3=flash temp when motion detected. Default=3, 2 takes a lot of battery power", range: 1..3, defaultValue: 3, displayDuringSetup: true, required: true
+	input "tempChange", "number", title: "When should the temperature be reported in deg C?", range: 1..50, defaultValue: 10, displayDuringSetup: true, required: false
+	input "humidityChange", "number", title: "When should the humidity be reported in percent change?", range: 1..50, defaultValue: 10, displayDuringSetup: true, required: false
+	input "luxChange", "number", title: "When should the lux be reported in percent change", range: 1..50, defaultValue: 10, displayDuringSetup: true, required: false
+	input "retriggerTime", "number", title: "How long should we say motion is detected?", range: 1..255, defaultValue: 3, displayDuringSetup: true, required: false
+	input "sensitivity", "number", title: "How sensitive should the motion detector be?", range: 1..7, defaultValue: 4, displayDuringSetup: true, required: false
+	input "ledMode", "number", title: "LED Mode: 1=off, 2=breathes temp and flashes motion, 3=flash temp when motion detected. Default=3, 2 takes a lot of battery power", range: 1..3, defaultValue: 3, displayDuringSetup: true, required: false
     }
 
 	simulator
@@ -364,6 +367,7 @@ def configure()
 	// LED Mode
 	zwave.configurationV1.configurationSet(parameterNumber: 7, size: 1, scaledConfigurationValue: ledMode)
     
+	log.debug "Configuration ${units} ${tempChange} ${humidityChange} ${luxChange} ${retriggerTime} ${sensitivity} ${ledMode}"
 
 		// disable notification-style motion events
 		zwave.notificationV3.notificationSet(notificationType: 7, notificationStatus: 0)
